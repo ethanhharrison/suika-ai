@@ -5,6 +5,11 @@ var Engine = Matter.Engine,
   Bodies = Matter.Bodies,
   Composite = Matter.Composite;
 
+const startingFruits = Array("cherry", "strawberry", "grape", "dekopon", "orange")
+Array.prototype.random = function () {
+  return this[Math.floor((Math.random()*this.length))];
+}
+
 var engine;
 var world;
 var fruits = [];
@@ -19,17 +24,17 @@ function setup() {
   world = engine.world;
   Runner.run(engine);
 
-  ground = new Barrier(width / 2, height, width, 20);
-  leftWall = new Barrier(0, height / 2, 20, height);
-  rightWall = new Barrier(width, height / 2, 20, height);
+  ground = new Barrier(width / 2, height, width, 40);
+  leftWall = new Barrier(0, height / 2, 40, height);
+  rightWall = new Barrier(width, height / 2, 40, height);
 
-  currFruit = new Fruit(mouseX, 60, "cherry");
+  currFruit = new Fruit(startingFruits.random());
 }
 
 function mousePressed() {
   currFruit.drop();
   fruits.push(currFruit);
-  currFruit = new Fruit(mouseX, 60, "cherry");
+  currFruit = new Fruit(startingFruits.random());
 }
 
 function clamp (min, max, val) {
@@ -49,7 +54,6 @@ function draw() {
     fruits[i].show();
   }
   
-  currFruit.follow();
   currFruit.show();
 
   ground.show();
