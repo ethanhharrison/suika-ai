@@ -23,9 +23,9 @@ function setup() {
   createCanvas(500, 750);
 
   var options = {
-    gravity: {scale: 0.00075, x: 0, y: 1},
-    positionIterations: 15,
-    velocityIterations: 10,
+    gravity: {scale: 0.0005 },
+    positionIterations: 6,
+    velocityIterations: 4,
   }
   engine = Engine.create(options);
 
@@ -48,7 +48,7 @@ function mousePressed() {
 function checkCollisions() {
   for (i = 0; i < fruits.length; i++) {
     for (j = 0; j < fruits.length; j++) {
-      if (i == j || j > i || !fruits[i] || !fruits[j]) {
+      if (i == j || j < i || !fruits[i] || !fruits[j]) {
         continue;
       }
       var coll = Collision.collides(fruits[i].body, fruits[j].body);
@@ -56,8 +56,8 @@ function checkCollisions() {
         continue;
       }
       fruits[i].combine(fruits[j]);
-      fruits.splice(i, 1);
-      fruits.splice(j, 1)
+      fruits.splice(j, 1);
+      fruits.splice(i, 1)
     }
   }
 }

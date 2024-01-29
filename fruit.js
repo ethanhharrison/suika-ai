@@ -1,16 +1,21 @@
 const fruitTypes = {
-  cherry:     { rgb: [255, 0, 0], r: 10 },
-  strawberry: { rgb: [255, 105, 180], r: 20 },
-  grape:      { rgb: [138, 43, 226], r: 30 },
-  dekopon:    { rgb: [255, 215, 0], r: 40 },
-  orange:     { rgb: [255, 140, 0], r: 50 },
-  apple:      { rgb: [255, 0, 0], r: 15 },
-  pear:       { rgb: [255, 0, 0], r: 15 },
-  peach:      { rgb: [255, 0, 0], r: 15 },
-  pineapple:  { rgb: [255, 0, 0], r: 15 },
-  honeydew:   { rgb: [255, 0, 0], r: 15 },
-  watermelon: { rgb: [255, 0, 0], r: 15 },
+  cherry:     { idx: 0, rgb: [255, 0, 0], r: 10 },
+  strawberry: { idx: 1, rgb: [255, 105, 180], r: 20 },
+  grape:      { idx: 2, rgb: [138, 43, 226], r: 30 },
+  dekopon:    { idx: 3, rgb: [255, 215, 0], r: 40 },
+  orange:     { idx: 4, rgb: [255, 140, 0], r: 50 },
+  apple:      { idx: 5, rgb: [255, 0, 0], r: 60 },
+  pear:       { idx: 6, rgb: [255, 0, 0], r: 70 },
+  peach:      { idx: 7, rgb: [255, 0, 0], r: 80 },
+  pineapple:  { idx: 8, rgb: [255, 0, 0], r: 90 },
+  honeydew:   { idx: 9, rgb: [255, 0, 0], r: 100 },
+  watermelon: { idx: 10, rgb: [255, 0, 0], r: 110 },
 };
+
+const fruitHeirarchy = Array("cherry", "strawberry", "grape", 
+                             "dekopon", "orange", "apple", 
+                             "pear", "peach", "pineapple", 
+                             "honeydew", "watermelon");
 
 function clamp (min, max, val) {
   return Math.max(min, Math.min(val, max));
@@ -28,8 +33,8 @@ function Fruit(type) {
   this.dropped = false;
 
   this.combine = function (other) {
-    Composite.remove(world, this.body);
     Composite.remove(world, other.body);
+    Composite.remove(world, this.body);
   }
 
   this.drop = function () {
