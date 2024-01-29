@@ -12,18 +12,30 @@ const fruitTypes = {
   watermelon: { rgb: [255, 0, 0], r: 15 },
 };
 
+function clamp (min, max, val) {
+  return Math.max(min, Math.min(val, max));
+}
+
 function Fruit(type) {
   var options = {
-    restitution: 0.5,
+    restitution: 0.3,
+    friction: 0.2
   };
   this.y = 60;
+  this.type = type;
   this.r = fruitTypes[type].r;
   this.rgb = fruitTypes[type].rgb;
   this.dropped = false;
 
+  this.combine = function (other) {
+    Composite.remove(world, this.body);
+    Composite.remove(world, other.body);
+  }
+
   this.drop = function () {
+    var xPos = clamp(this.r + 5, width - this.r - 5, mouseX);
+    this.body = Bodies.circle(xPos, this.y, this.r, options);
     this.dropped = true;
-    this.body = Bodies.circle(mouseX, this.y, this.r, options);
     Composite.add(world, this.body);
   }
   
@@ -31,7 +43,8 @@ function Fruit(type) {
     push();
 
     if (!this.dropped) {
-      translate(mouseX, this.y);
+      var xPos = clamp(this.r + 5, width - this.r - 5, mouseX);
+      translate(xPos, this.y);
     }
     else {
       var pos = this.body.position;
@@ -40,7 +53,7 @@ function Fruit(type) {
       rotate(radians(angle));
     }
 
-    stroke(255);
+    stroke(this.rgb);
     fill(this.rgb);
     
     circle(0, 0, this.r * 2);

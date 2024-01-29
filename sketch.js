@@ -1,13 +1,14 @@
 // module aliases
 var Engine = Matter.Engine,
-  // Render = Matter.Render,
   Runner = Matter.Runner,
   Bodies = Matter.Bodies,
-  Composite = Matter.Composite;
+  Composite = Matter.Composite,
+  Collision = Matter.Collision;
 
 const startingFruits = Array("cherry", "strawberry", "grape", "dekopon", "orange")
 Array.prototype.random = function () {
-  return this[Math.floor((Math.random()*this.length))];
+  var index = Math.floor((Math.random()*this.length));
+  return this[index];
 }
 
 var engine;
@@ -20,13 +21,20 @@ var rightWall;
 
 function setup() {
   createCanvas(500, 750);
-  engine = Engine.create();
+
+  var options = {
+    gravity: {scale: 0.00075, x: 0, y: 1},
+    positionIterations: 15,
+    velocityIterations: 10,
+  }
+  engine = Engine.create(options);
+
   world = engine.world;
   Runner.run(engine);
 
-  ground = new Barrier(width / 2, height, width, 40);
-  leftWall = new Barrier(0, height / 2, 40, height);
-  rightWall = new Barrier(width, height / 2, 40, height);
+  ground = new Barrier(width / 2, height, width, 10);
+  leftWall = new Barrier(0, height / 2, 10, height);
+  rightWall = new Barrier(width, height / 2, 10, height);
 
   currFruit = new Fruit(startingFruits.random());
 }
@@ -37,25 +45,32 @@ function mousePressed() {
   currFruit = new Fruit(startingFruits.random());
 }
 
-function clamp (min, max, val) {
-  if (val < min) {
-    return min;
+function checkCollisions() {
+  for (i = 0; i < fruits.length; i++) {
+    for (j = 0; j < fruits.length; j++) {
+      if (i == j || j > i || !fruits[i] || !fruits[j]) {
+        continue;
+      }
+      var coll = Collision.collides(fruits[i].body, fruits[j].body);
+      if (!coll || fruits[i].type != fruits[j].type) {
+        continue;
+      }
+      fruits[i].combine(fruits[j]);
+      fruits.splice(i, 1);
+      fruits.splice(j, 1)
+    }
   }
-  if (val > max) {
-    return max;
-  }
-  return val;
 }
 
 function draw() {
   background(51);
 
+  checkCollisions();
+
   for (i = 0; i < fruits.length; i++) {
     fruits[i].show();
   }
-  
   currFruit.show();
-
   ground.show();
   leftWall.show();
   rightWall.show();
