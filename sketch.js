@@ -7,21 +7,33 @@ var Engine = Matter.Engine,
 
 var engine;
 var world;
-var circle1;
+var circles = [];
+var ground;
+var leftWall;
+var rightWall;
 
 function setup() {
-  createCanvas(400, 400);
+  createCanvas(500, 750);
   engine = Engine.create();
   world = engine.world;
-  circle1 = new Circle(200, 100, 80);
-
-  Composite.add(world, [circle1]);
   Runner.run(engine);
 
-  console.log(circle);
+  var options = { isStatic: true };
+  ground = new Barrier(width / 2, height, width, 20);
+  leftWall = new Barrier(0, height / 2, 20, height);
+  rightWall = new Barrier(width, height / 2, 20, height);
+}
+
+function mousePressed() {
+  circles.push(new Circle(mouseX, 0, 40));
 }
 
 function draw() {
   background(51);
-  circle1.show();
+  for (i = 0; i < circles.length; i++) {
+    circles[i].show();
+  }
+  ground.show();
+  leftWall.show();
+  rightWall.show();
 }
