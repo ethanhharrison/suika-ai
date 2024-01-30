@@ -21,21 +21,18 @@ function clamp (min, max, val) {
   return Math.max(min, Math.min(val, max));
 }
 
-function Fruit(type) {
+function Fruit(x, y, type) {
   var options = {
     restitution: 0.3,
     friction: 0.2
   };
-  this.y = 60;
+  this.x = x
+  this.y = y;
   this.type = type;
   this.r = fruitTypes[type].r;
   this.rgb = fruitTypes[type].rgb;
+  this.idx = fruitTypes[type].idx;
   this.dropped = false;
-
-  this.combine = function (other) {
-    Composite.remove(world, other.body);
-    Composite.remove(world, this.body);
-  }
 
   this.drop = function () {
     var xPos = clamp(this.r + 5, width - this.r - 5, mouseX);
@@ -54,7 +51,11 @@ function Fruit(type) {
     else {
       var pos = this.body.position;
       var angle = this.body.angle;
-      translate(pos.x, pos.y);
+
+      this.x = pos.x;
+      this.y = pos.y;
+
+      translate(this.x, this.y);
       rotate(radians(angle));
     }
 

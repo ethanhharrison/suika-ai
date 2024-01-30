@@ -31,8 +31,6 @@ function setup() {
     velocityIterations: 4,
   }
   engine = Engine.create(options);
-  composite = Composite.create();
-
   world = engine.world;
   Runner.run(engine);
 
@@ -42,10 +40,15 @@ function setup() {
       bodyA = pairs[i].bodyA;
       bodyB = pairs[i].bodyB;
       if (bodyA.circleRadius == bodyB.circleRadius) {
-        Composite.remove(world, [bodyA, bodyB]);
+        var fruitA = bodies[bodyA.id];
+        var fruitB = bodies[bodyB.id];
+
+        console.log((fruitA.x + fruitB.x) / 2, 
+                    (fruitA.y + fruitB.y) / 2);
+
         delete bodies[bodyA.id];
         delete bodies[bodyB.id];
-        console.log(bodies);
+        Composite.remove(world, [bodyA, bodyB]);
       }
     }
   })  
@@ -53,13 +56,13 @@ function setup() {
   ground = new Barrier(width / 2, height, width, 10);
   leftWall = new Barrier(0, height / 2, 10, height);
   rightWall = new Barrier(width, height / 2, 10, height);
-  currFruit = new Fruit(startingFruits.random());
+  currFruit = new Fruit(0, 60, startingFruits.random());
 }
 
 function mousePressed() {
   currFruit.drop();
   bodies[currFruit.body.id] = currFruit;
-  currFruit = new Fruit(startingFruits.random());
+  currFruit = new Fruit(0, 60, startingFruits.random());
 }
 
 function draw() {
