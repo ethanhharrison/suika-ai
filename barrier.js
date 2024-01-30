@@ -5,6 +5,7 @@ function Barrier(x, y, w, h) {
   this.body = Bodies.rectangle(x, y, w, h, options);
   this.w = w;
   this.h = h;
+  bodies[this.body.id] = this;
   Composite.add(world, this.body);
 
   this.show = function () {

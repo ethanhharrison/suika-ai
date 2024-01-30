@@ -3,7 +3,8 @@ var Engine = Matter.Engine,
   Runner = Matter.Runner,
   Bodies = Matter.Bodies,
   Composite = Matter.Composite,
-  Collision = Matter.Collision;
+  Collision = Matter.Collision,
+  Events = Matter.Events;
 
 const startingFruits = Array("cherry", "strawberry", "grape", "dekopon", "orange")
 Array.prototype.random = function () {
@@ -11,9 +12,11 @@ Array.prototype.random = function () {
   return this[index];
 }
 
+var composite;
 var engine;
 var world;
-var fruits = [];
+
+var bodies = {};
 var currFruit;
 var ground;
 var leftWall;
@@ -28,50 +31,41 @@ function setup() {
     velocityIterations: 4,
   }
   engine = Engine.create(options);
+  composite = Composite.create();
 
   world = engine.world;
   Runner.run(engine);
 
+  Events.on(engine, "collisionStart", function (event) {
+    var pairs = event.pairs;
+    for (var i = 0; i < pairs.length; i++) {
+      bodyA = pairs[i].bodyA;
+      bodyB = pairs[i].bodyB;
+      if (bodyA.circleRadius == bodyB.circleRadius) {
+        Composite.remove(world, [bodyA, bodyB]);
+        delete bodies[bodyA.id];
+        delete bodies[bodyB.id];
+        console.log(bodies);
+      }
+    }
+  })  
+
   ground = new Barrier(width / 2, height, width, 10);
   leftWall = new Barrier(0, height / 2, 10, height);
   rightWall = new Barrier(width, height / 2, 10, height);
-
   currFruit = new Fruit(startingFruits.random());
 }
 
 function mousePressed() {
   currFruit.drop();
-  fruits.push(currFruit);
+  bodies[currFruit.body.id] = currFruit;
   currFruit = new Fruit(startingFruits.random());
-}
-
-function checkCollisions() {
-  for (i = 0; i < fruits.length; i++) {
-    for (j = 0; j < fruits.length; j++) {
-      if (i == j || j < i || !fruits[i] || !fruits[j]) {
-        continue;
-      }
-      var coll = Collision.collides(fruits[i].body, fruits[j].body);
-      if (!coll || fruits[i].type != fruits[j].type) {
-        continue;
-      }
-      fruits[i].combine(fruits[j]);
-      fruits.splice(j, 1);
-      fruits.splice(i, 1)
-    }
-  }
 }
 
 function draw() {
   background(51);
-
-  checkCollisions();
-
-  for (i = 0; i < fruits.length; i++) {
-    fruits[i].show();
-  }
   currFruit.show();
-  ground.show();
-  leftWall.show();
-  rightWall.show();
+  for (const [key, value] of Object.entries(bodies)) {
+    value.show();
+  }
 }
