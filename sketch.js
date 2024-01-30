@@ -43,8 +43,13 @@ function setup() {
         var fruitA = bodies[bodyA.id];
         var fruitB = bodies[bodyB.id];
 
-        console.log((fruitA.x + fruitB.x) / 2, 
-                    (fruitA.y + fruitB.y) / 2);
+        var x = (fruitA.x + fruitB.x) / 2;
+        var y = (fruitA.y + fruitB.y) / 2;
+        var type = fruitHeirarchy[fruitA.idx + 1];
+
+        var combinedFruit = new Fruit(x, y, type);
+        combinedFruit.combined();
+        bodies[combinedFruit.body.id] = combinedFruit;
 
         delete bodies[bodyA.id];
         delete bodies[bodyB.id];
