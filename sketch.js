@@ -54,6 +54,8 @@ function setup() {
         delete bodies[bodyA.id];
         delete bodies[bodyB.id];
         Composite.remove(world, [bodyA, bodyB]);
+
+        console.log(bodies);
       }
     }
   })  
