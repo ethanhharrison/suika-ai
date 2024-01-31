@@ -27,9 +27,9 @@ var boxHeight;
 var boxThickness;
 
 function setup() {
-  createCanvas(500, 750);
+  createCanvas(700, 700);
 
-  boxWidth = width * 7/8;
+  boxWidth = width * 5/8;
   boxHeight = height * 6/8;
   boxThickness = 15;
 
@@ -62,8 +62,6 @@ function setup() {
         delete bodies[bodyA.id];
         delete bodies[bodyB.id];
         Composite.remove(world, [bodyA, bodyB]);
-
-        console.log(bodies);
       }
     }
   })  
@@ -85,16 +83,30 @@ function dropFruit() {
   return currFruit;
 }
 
+function isLost() {
+  for (const [key, value] of Object.entries(bodies)) {
+    if (value.y <= height - boxHeight && value.body.velocity.y <= 0.1) {
+      console.log(value.body);
+      return true;
+    }
+  } 
+  return false;
+}
+
 function draw() {
   background(51);
 
   stroke(255);
-  drawingContext.setLineDash([10, 10])
+  drawingContext.setLineDash([15, 10]);
   line((width - boxWidth) / 2, height - boxHeight, (width + boxWidth) / 2, height - boxHeight);
-  drawingContext.setLineDash([0, 0])
+  drawingContext.setLineDash([0, 0]);
 
   currFruit.show();
   for (const [key, value] of Object.entries(bodies)) {
     value.show();
+  }
+
+  if (isLost()) {
+    console.log("Lost the game!")
   }
 }
