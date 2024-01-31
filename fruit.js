@@ -41,7 +41,7 @@ function Fruit(x, y, type) {
   }
 
   this.drop = function () {
-    var xPos = clamp(this.r + 5, width - this.r - 5, mouseX);
+    var xPos = clamp((width - boxWidth + boxThickness) / 2 + this.r, (width + boxWidth - boxThickness) / 2 - this.r, mouseX);
     this.body = Bodies.circle(xPos, this.y, this.r, options);
     this.dropped = true;
     Composite.add(world, this.body);
@@ -51,7 +51,7 @@ function Fruit(x, y, type) {
     push();
 
     if (!this.dropped) {
-      var xPos = clamp(this.r + 5, width - this.r - 5, mouseX);
+      var xPos = clamp((width - boxWidth + boxThickness) / 2 + this.r, (width + boxWidth - boxThickness) / 2 - this.r, mouseX);
       translate(xPos, this.y);
     }
     else {

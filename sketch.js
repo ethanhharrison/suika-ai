@@ -22,8 +22,16 @@ var ground;
 var leftWall;
 var rightWall;
 
+var boxWidth;
+var boxHeight;
+var boxThickness;
+
 function setup() {
   createCanvas(500, 750);
+
+  boxWidth = width * 7/8;
+  boxHeight = height * 6/8;
+  boxThickness = 15;
 
   var options = {
     gravity: {scale: 0.0005 },
@@ -60,9 +68,9 @@ function setup() {
     }
   })  
 
-  ground = new Barrier(width / 2, height, width, 10);
-  leftWall = new Barrier(0, height / 2, 10, height);
-  rightWall = new Barrier(width, height / 2, 10, height);
+  ground = new Barrier(width / 2, height - boxThickness / 2, boxWidth, boxThickness);
+  lWall = new Barrier((width - boxWidth) / 2, height - boxHeight / 2, boxThickness, boxHeight);
+  rWall = new Barrier((width + boxWidth) / 2, height - boxHeight / 2, boxThickness, boxHeight);
   currFruit = new Fruit(0, 60, startingFruits.random());
 }
 
@@ -74,6 +82,12 @@ function mousePressed() {
 
 function draw() {
   background(51);
+
+  drawingContext.setLineDash([10, 10])
+  stroke(255);
+  line((width - boxWidth) / 2, height - boxHeight, (width + boxWidth) / 2, height - boxHeight);
+  drawingContext.setLineDash([0, 0])
+
   currFruit.show();
   for (const [key, value] of Object.entries(bodies)) {
     value.show();
