@@ -75,16 +75,21 @@ function setup() {
 }
 
 function mousePressed() {
+  dropFruit();
+}
+
+function dropFruit() {
   currFruit.drop();
   bodies[currFruit.body.id] = currFruit;
   currFruit = new Fruit(0, 60, startingFruits.random());
+  return currFruit;
 }
 
 function draw() {
   background(51);
 
-  drawingContext.setLineDash([10, 10])
   stroke(255);
+  drawingContext.setLineDash([10, 10])
   line((width - boxWidth) / 2, height - boxHeight, (width + boxWidth) / 2, height - boxHeight);
   drawingContext.setLineDash([0, 0])
 
