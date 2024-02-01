@@ -31,12 +31,13 @@ function setup() {
 
   boxWidth = width * 5/8;
   boxHeight = height * 6/8;
-  boxThickness = 15;
+  boxThickness = 30;
 
   var options = {
     gravity: {scale: 0.0005 },
-    positionIterations: 6,
-    velocityIterations: 4,
+    positionIterations: 50,
+    velocityIterations: 50,
+    timing: {timeScale: 3}
   }
   engine = Engine.create(options);
   world = engine.world;
