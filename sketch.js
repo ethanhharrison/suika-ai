@@ -109,7 +109,6 @@ function dropFruit() {
 function isLost() {
   for (const [key, value] of Object.entries(fruits)) {
     if (value.y <= height - boxHeight && value.body.velocity.y <= 0.1) {
-      console.log(value.body);
       return true;
     }
   } 
