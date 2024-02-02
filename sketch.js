@@ -16,7 +16,8 @@ var composite;
 var engine;
 var world;
 
-var bodies = {};
+var barriers = {};
+var fruits = {};
 var currFruit;
 var ground;
 var leftWall;
@@ -49,8 +50,8 @@ function setup() {
       bodyA = pairs[i].bodyA;
       bodyB = pairs[i].bodyB;
       if (bodyA.circleRadius == bodyB.circleRadius) {
-        var fruitA = bodies[bodyA.id];
-        var fruitB = bodies[bodyB.id];
+        var fruitA = fruits[bodyA.id];
+        var fruitB = fruits[bodyB.id];
 
         var x = (fruitA.x + fruitB.x) / 2;
         var y = (fruitA.y + fruitB.y) / 2;
@@ -58,10 +59,10 @@ function setup() {
 
         var combinedFruit = new Fruit(x, y, type);
         combinedFruit.combined();
-        bodies[combinedFruit.body.id] = combinedFruit;
+        fruits[combinedFruit.body.id] = combinedFruit;
 
-        delete bodies[bodyA.id];
-        delete bodies[bodyB.id];
+        delete fruits[bodyA.id];
+        delete fruits[bodyB.id];
         Composite.remove(world, [bodyA, bodyB]);
       }
     }
@@ -77,15 +78,28 @@ function mousePressed() {
   dropFruit();
 }
 
+function keyTyped() {
+  if (key == "r") {
+    reset();
+  }
+}
+
+function reset() {
+  for (const [key, value] of Object.entries(fruits)) {
+    Composite.remove(world, value.body);
+  }
+  fruits = {};
+}
+
 function dropFruit() {
   currFruit.drop();
-  bodies[currFruit.body.id] = currFruit;
+  fruits[currFruit.body.id] = currFruit;
   currFruit = new Fruit(0, 60, startingFruits.random());
   return currFruit;
 }
 
 function isLost() {
-  for (const [key, value] of Object.entries(bodies)) {
+  for (const [key, value] of Object.entries(fruits)) {
     if (value.y <= height - boxHeight && value.body.velocity.y <= 0.1) {
       console.log(value.body);
       return true;
@@ -103,11 +117,14 @@ function draw() {
   drawingContext.setLineDash([0, 0]);
 
   currFruit.show();
-  for (const [key, value] of Object.entries(bodies)) {
+  for (const [key, value] of Object.entries(fruits)) {
     value.show();
   }
-
+  for (const [key, value] of Object.entries(barriers)) {
+    value.show();
+  }
   if (isLost()) {
-    console.log("Lost the game!")
+    console.log("You Lost!");
+    noLoop();
   }
 }
