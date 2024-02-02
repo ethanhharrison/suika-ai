@@ -22,19 +22,21 @@ var currFruit;
 var ground;
 var leftWall;
 var rightWall;
+
 var gameOver;
+var totalPoints;
 
 var boxWidth;
 var boxHeight;
 var boxThickness;
 
 function setup() {
-  createCanvas(700, 700);
+  createCanvas(600, 700);
   textAlign(CENTER);    
   rectMode(CENTER);
 
-  boxWidth = width * 5/8;
-  boxHeight = height * 6/8;
+  boxWidth = width * 0.6;
+  boxHeight = height * 0.5;
   boxThickness = 30;
 
   var options = {
@@ -63,6 +65,7 @@ function setup() {
         var combinedFruit = new Fruit(x, y, type);
         combinedFruit.combined();
         fruits[combinedFruit.body.id] = combinedFruit;
+        totalPoints += combinedFruit.points;
 
         delete fruits[bodyA.id];
         delete fruits[bodyB.id];
@@ -74,9 +77,10 @@ function setup() {
   ground = new Barrier(width / 2, height - boxThickness / 2, boxWidth, boxThickness);
   lWall = new Barrier((width - boxWidth) / 2, height - boxHeight / 2, boxThickness, boxHeight);
   rWall = new Barrier((width + boxWidth) / 2, height - boxHeight / 2, boxThickness, boxHeight);
-  currFruit = new Fruit(0, 60, startingFruits.random());
+  currFruit = new Fruit(0, height - 5 * boxHeight / 4, startingFruits.random());
 
   gameOver = false;
+  totalPoints = 0;
 }
 
 function mousePressed() {
@@ -97,12 +101,13 @@ function reset() {
   }
   fruits = {};
   gameOver = false;
+  totalPoints = 0;
 }
 
 function dropFruit() {
   currFruit.drop();
   fruits[currFruit.body.id] = currFruit;
-  currFruit = new Fruit(0, 60, startingFruits.random());
+  currFruit = new Fruit(0, height - 5 * boxHeight / 4, startingFruits.random());
   return currFruit;
 }
 
@@ -123,6 +128,10 @@ function draw() {
   line((width - boxWidth) / 2, height - boxHeight, (width + boxWidth) / 2, height - boxHeight);
   drawingContext.setLineDash([0, 0]);
 
+  fill(255);
+  textSize(30);
+  text("Total Points: " + totalPoints, 125, 75);
+
   currFruit.show();
   for (const [key, value] of Object.entries(fruits)) {
     value.show();
@@ -132,10 +141,14 @@ function draw() {
   }
   if (isLost()) {
     fill(255);
-    textSize(150);
+
+    textSize(125);
     text("You Lost!", width / 2, height / 2);
-    textSize(50);
-    text("Press 'R' to reset the game", width / 2, height / 2 + 75);
+
+    textSize(40);
+    text("Total Points: " + totalPoints, width / 2, height / 2 + 75);
+    text("Press 'R' to reset the game", width / 2, height / 2 + 150);
+
     for (const [key, value] of Object.entries(fruits)) {
       value.body.isStatic = true;
     }
