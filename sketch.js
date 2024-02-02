@@ -22,6 +22,7 @@ var currFruit;
 var ground;
 var leftWall;
 var rightWall;
+var gameOver;
 
 var boxWidth;
 var boxHeight;
@@ -72,10 +73,14 @@ function setup() {
   lWall = new Barrier((width - boxWidth) / 2, height - boxHeight / 2, boxThickness, boxHeight);
   rWall = new Barrier((width + boxWidth) / 2, height - boxHeight / 2, boxThickness, boxHeight);
   currFruit = new Fruit(0, 60, startingFruits.random());
+
+  gameOver = false;
 }
 
 function mousePressed() {
-  dropFruit();
+  if (!gameOver) {
+    dropFruit();
+  }
 }
 
 function keyTyped() {
@@ -89,6 +94,7 @@ function reset() {
     Composite.remove(world, value.body);
   }
   fruits = {};
+  gameOver = false;
 }
 
 function dropFruit() {
@@ -125,6 +131,9 @@ function draw() {
   }
   if (isLost()) {
     console.log("You Lost!");
-    noLoop();
+    for (const [key, value] of Object.entries(fruits)) {
+      value.body.isStatic = true;
+    }
+    gameOver = true;
   }
 }
