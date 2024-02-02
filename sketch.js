@@ -30,6 +30,8 @@ var boxThickness;
 
 function setup() {
   createCanvas(700, 700);
+  textAlign(CENTER);    
+  rectMode(CENTER);
 
   boxWidth = width * 5/8;
   boxHeight = height * 6/8;
@@ -130,7 +132,11 @@ function draw() {
     value.show();
   }
   if (isLost()) {
-    console.log("You Lost!");
+    fill(255);
+    textSize(150);
+    text("You Lost!", width / 2, height / 2);
+    textSize(50);
+    text("Press 'R' to reset the game", width / 2, height / 2 + 75);
     for (const [key, value] of Object.entries(fruits)) {
       value.body.isStatic = true;
     }
