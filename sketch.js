@@ -37,7 +37,7 @@ function setup() {
     gravity: {scale: 0.0005 },
     positionIterations: 50,
     velocityIterations: 50,
-    timing: {timeScale: 3}
+    timing: {timeScale: 1.5}
   }
   engine = Engine.create(options);
   world = engine.world;
