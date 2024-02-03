@@ -10,7 +10,7 @@ function clamp (min, max, val) {
 function Fruit(x, y, type) {
   var options = {
     restitution: 0.3,
-    friction: 0.01
+    friction: 1
   };
   this.x = x
   this.y = y;
